@@ -26,16 +26,15 @@ uninstall() {
     fi
   done
 
-  echo "Removing wallpapers..."
-  rm -f ~/Pictures/monterey.png
-
-  echo "Resetting desktop background..."
-  gsettings reset org.gnome.desktop.background picture-uri
-  gsettings reset org.gnome.desktop.background picture-uri-dark
-
   echo "Uninstall completed."
   exit 0
 }
+
+# Check if the script is run as root
+if [[ "$EUID" -eq 0 ]]; then
+  echo "Error: Do not run this script as root or with sudo."
+  exit 1
+fi
 
 # Cleaning previous directories
 echo "Cleaning directories..."
@@ -56,9 +55,9 @@ git clone https://github.com/vinceliuice/WhiteSur-cursors.git --depth=1
 
 # Installing theme
 if [[ -f "$2" || "$2" == '-light' ]]; then
-  WhiteSur-gtk-theme/install.sh -l -c Light
+  WhiteSur-gtk-theme/install.sh -l -c Light 
 else
-  WhiteSur-gtk-theme/install.sh -l -c Dark
+  WhiteSur-gtk-theme/install.sh -l -c Dark 
 fi
 WhiteSur-gtk-theme/tweaks.sh -F
 
@@ -69,14 +68,9 @@ WhiteSur-icon-theme/install.sh -b
 mkdir -p ~/.local/share/icons/WhiteSur-cursors
 cp WhiteSur-cursors/dist/* ~/.local/share/icons/WhiteSur-cursors -prf
 
-# Wallpapers
-mkdir -p ~/Pictures/
-cp -r wallpaper/* ~/Pictures/ 
-gsettings set org.gnome.desktop.background picture-uri "file:///home/$user_name/Pictures/monterey.png"
-gsettings set org.gnome.desktop.background picture-uri-dark "file:///home/$user_name/Pictures/monterey.png"
-
 # Load settings using dconf
 dconf load / < dconf/settings.dconf
 
 # Fonts
+mkdir -p ~/.local/share/fonts/
 cp fonts/* ~/.local/share/fonts/
