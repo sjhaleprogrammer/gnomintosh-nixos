@@ -57,7 +57,7 @@ git clone https://github.com/vinceliuice/WhiteSur-cursors.git --depth=1
 if [[ -f "$2" || "$2" == '-light' ]]; then
   WhiteSur-gtk-theme/install.sh -l -c Light 
 else
-  WhiteSur-gtk-theme/install.sh -l -c Dark 
+  WhiteSur-gtk-theme/install.sh -l  
 fi
 WhiteSur-gtk-theme/tweaks.sh -F
 
